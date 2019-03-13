@@ -6,7 +6,7 @@ import time
 # This function determines if a query was successful or not
 def bad_query(time_to_rec, r):
 
-    # This value is to check if the response time is too long. The value could be tweaked or determined by normal
+    # This value is to check if the response time is too long. The value could be tweaked or determined from normal
     # response times
     if time_to_rec > 20:
 
@@ -106,14 +106,14 @@ def query_loop(url, queries_available_, time_frame_):
 
     while True:
 
-        cmd = input("Press enter to make a request or write a command: ")
+        cmd = input("Press enter to make a request or write a command (exit/refresh): ")
 
         if cmd == "exit":
             return
 
         if cmd == "refresh":
             print("Waiting for 15 seconds")
-            sleep(15)  # Program needs to wait for all the old requests to flush out. This time could be tweaked.
+            sleep(15)  # Program needs to wait for all the old requests to flush out. This time can be tweaked.
             tokens, time_frame_ = learn_rate_limit(url)
             requests_list = []
 
