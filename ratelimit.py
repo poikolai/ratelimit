@@ -6,6 +6,8 @@ import time
 # This function determines if a query was successful or not
 def bad_query(time_to_rec, r):
 
+    # This value is to check if the response time is too long. The value could be tweaked or determined by normal
+    # response times
     if time_to_rec > 20:
 
         return True
@@ -69,7 +71,8 @@ def learn_rate_limit(url):
             print(r.status_code)
             sleep((2**n)-1)
             print("Waiting for: ", (2**n)-1, " seconds")
-            n += 1
+            if n < 63:
+                n += 1
 
         else:
             send_time = time.time()
@@ -85,8 +88,11 @@ def learn_rate_limit(url):
 
     time_frame_ = time.time() - time_frame_beg
 
-    print("Sallittu määrä on: ", queries_available_)
-    print("Ajan pituus on: ", time_frame_)
+    print("Max number of queries: ", queries_available_)
+    print("Time frame length is: ", time_frame_)
+
+    print("Waiting for ", time_frame_, " seconds")
+    sleep(time_frame_)
 
     return queries_available_, time_frame_
 
@@ -107,7 +113,7 @@ def query_loop(url, queries_available_, time_frame_):
 
         if cmd == "refresh":
             print("Waiting for 15 seconds")
-            sleep(15)  # Program needs to wait for all the old requests to flush out
+            sleep(15)  # Program needs to wait for all the old requests to flush out. This time could be tweaked.
             tokens, time_frame_ = learn_rate_limit(url)
             requests_list = []
 
@@ -145,9 +151,10 @@ def query_loop(url, queries_available_, time_frame_):
 
 def main():
 
-    url = "http://13.93.106.105:8080/api/hello"
+    url = input("Please enter URL and press enter: ")
     queries_available, time_frame = learn_rate_limit(url)
     query_loop(url, queries_available, time_frame)
 
 
 main()
+
